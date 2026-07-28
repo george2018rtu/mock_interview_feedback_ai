@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+    <title>AI Mock Interview</title>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <p class="eyebrow">INTERVIEW PRACTICE</p>
+            <h1>AI Mock Interview</h1>
+            <p class="subtitle">Record an answer and receive feedback on content, structure, pacing, and filler words.</p>
+        </header>
+        <section class="card controls">
+            <label for="question">Interview question</label>
+            <select id="question">
+                {% for item in questions %}
+                    <option value="{{ item.id }}">{{ item.question }}</option>
+                {% endfor %}
+            </select>
+            <div class="status-row">
+                <span id="recordingIndicator" class="indicator"></span>
+                <p id="status">Press start when you are ready.</p>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="button-row">
+                <button id="startButton" class="primary">Start recording</button>
+                <button id="stopButton" class="danger" disabled>Stop recording</button>
+            </div>
+        </section>
+        <section id="loading" class="card loading" hidden>
+            <div class="spinner"></div>
+            <p>Transcribing and evaluating your answer...</p>
+        </section>
+        <section id="results" hidden>
+            <div class="score-card"><p>Overall score</p><strong id="overallScore"></strong></div>
+            <div class="metric-grid">
+                <article class="card metric"><span>Relevance</span><strong id="relevanceScore"></strong></article>
+                <article class="card metric"><span>Structure</span><strong id="structureScore"></strong></article>
+                <article class="card metric"><span>Specificity</span><strong id="specificityScore"></strong></article>
+                <article class="card metric"><span>Communication</span><strong id="communicationScore"></strong></article>
+                <article class="card metric"><span>Speaking speed</span><strong id="speakingSpeed"></strong></article>
+                <article class="card metric"><span>Filler words</span><strong id="fillerCount"></strong></article>
+            </div>
+            <article class="card"><h2>Transcript</h2><p id="transcript"></p></article>
+            <div class="feedback-grid">
+                <article class="card"><h2>Strengths</h2><ul id="strengths"></ul></article>
+                <article class="card"><h2>Areas to improve</h2><ul id="improvements"></ul></article>
+            </div>
+            <article class="card"><h2>Missing concepts</h2><ul id="missingConcepts"></ul></article>
+            <article class="card"><h2>Improved answer</h2><p id="improvedAnswer"></p></article>
+            <article class="card"><h2>Possible follow-up question</h2><p id="followUpQuestion"></p></article>
+        </section>
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </main>
+</body>
+</html>
