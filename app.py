@@ -1,24 +1,22 @@
 import os
 import tempfile
-
 from pathlib import Path
-
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request
+from flask import (Flask,jsonify,redirect,render_template,request,session,url_for)
 from groq import Groq
-
+from supabase import create_client
 from ai_evaluator import evaluate_answer
 from analyzer import analyze_speech
 from questions import questions
 import pandas as pd
 load_dotenv()
 
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
-)
+supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 app = Flask(__name__)
-
+app.secret_key=os.getenv("FLASK_SECRET_KEY")
 app.config["MAX_CONTENT_LENGTH"] = (
     20 * 1024 * 1024
 )
@@ -55,16 +53,19 @@ def get_question(question_id):
 
 @app.route("/")
 def index():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
     return render_template(
         "index.html",
         sectors=get_all_possible_sectors()
     )
 
+
 def get_questions_by_sector(sector):
     filtered = df[df["role"] == sector]
 
     questions_list = []
-
     for _, row in filtered.iterrows():
         questions_list.append({
             "id": row["id"],
@@ -74,31 +75,29 @@ def get_questions_by_sector(sector):
             "role": row["role"],
             "difficulty": row["difficulty"]
         })
-
     return questions_list
 
 @app.route("/questions")
 def filtered_questions():
     sector = request.args.get("sector", "").strip()
-
     if not sector:
         return jsonify([])
-
     questions_list = get_questions_by_sector(sector)
-
     return jsonify(questions_list)
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
+    if "user_id" not in session:
+        return jsonify({
+            "error": "Please log in first."
+        }), 401
+
     audio = request.files.get("audio")
-
     question_id = request.form.get("question_id", "").strip()
-
     duration_text = request.form.get(
         "duration",
         "0"
     )
-
     if audio is None or not audio.filename:
         return jsonify(
             {
@@ -114,7 +113,6 @@ def analyze():
                     "The selected question is invalid."
             }
         ), 400
-
     try:
         seconds = float(duration_text)
     except ValueError:
@@ -177,6 +175,11 @@ def analyze():
             speech,
             evaluation
         )
+        for area in evaluation.get("improvements", []):
+            supabase.table("improvements").insert({
+                "user_id": session["user_id"],
+                "area": area
+            }).execute()
 
         return jsonify(
             {
@@ -205,6 +208,28 @@ def analyze():
             if os.path.exists(audio_path):
                 os.remove(audio_path)
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    error=None
+    if request.method=="POST":
+        email=request.form.get(("email")or"").strip()
+        password=request.form.get(("password") or "")
+        try:
+            response=supabase.auth.sign_in_with_password({
+                "email":email,
+                "password":password
+            })
+            session["user_id"]=str(response.user.id)
+            session["email"]=response.user.email
+            return redirect(url_for("index"))
+        except Exception:
+            error="Incorrect email or password"
+    return render_template("login.html", error=error)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 def transcribe(audio_path):
     with open(
@@ -237,7 +262,24 @@ def get_total_score(speech, evaluation):
     )
 
     return round(total)
+@app.route("/dashboard")
+def dashboard():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    result = (
+        supabase
+        .table("improvements")
+        .select("*")
+        .eq("user_id", session["user_id"])
+        .order("created_at", desc=True)
+        .execute()
+    )
+    improvements = result.data or []
 
+    return render_template(
+        "dashboard.html",
+        improvements=improvements
+    )
 
 @app.errorhandler(413)
 def file_too_large(_error):

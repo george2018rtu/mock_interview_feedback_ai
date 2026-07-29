@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <title>Your Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="static/styles.css"
+    >
+</head>
+
+<body>
+    <main class="container">
+
+        <nav>
+            <a href="{{ url_for('index') }}">
+                Practice interview
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                Log out
+            </a>
+        </nav>
+
+        <section class="card">
+            <h1>What You Should Improve</h1>
+
+            {% if improvements %}
+                <div class="improvement-list">
+
+                    {% for item in improvements %}
+                        <article class="improvement-item">
+                            <ul>
+                                <li>{{ item.area }}</li>
+                            </ul>
+                        </article>
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <p>
+                    Complete an interview to receive improvement feedback.
+                </p>
+            {% endif %}
+        </section>
+
+    </main>
+</body>
+</html>
