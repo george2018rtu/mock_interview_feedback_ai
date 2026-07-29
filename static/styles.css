@@ -16,7 +16,9 @@ header{
     padding: 15px;
     border-radius:5px
 }
-
+.card-metric{
+    padding: 5px
+}
 #results{
     border: 2px solid gray;
     margin: 20px;
