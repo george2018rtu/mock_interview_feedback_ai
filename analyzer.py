@@ -24,7 +24,6 @@ def get_words(text):
 
 def get_fillers(text):
     found = {}
-
     for name, pattern in FILLERS.items():
         count = len(
             re.findall(
@@ -33,26 +32,19 @@ def get_fillers(text):
                 flags=re.IGNORECASE
             )
         )
-
         if count > 0:
             found[name] = count
-
     return found
 
 
 def analyze_speech(transcript, seconds):
     words = get_words(transcript)
-
     word_count = len(words)
-
     safe_seconds = max(seconds, 1)
-
     wpm = round(
         word_count / (safe_seconds / 60)
     )
-
     filler_info = get_fillers(transcript)
-
     filler_count = sum(
         filler_info.values()
     )

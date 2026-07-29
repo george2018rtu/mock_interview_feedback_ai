@@ -45,11 +45,20 @@ def get_all_possible_sectors():
     return sectors.tolist()
 
 def get_question(question_id):
-    for item in get_questions():
-        if item["id"] == question_id:
-            return item
-    return None
-
+    filtered = df[df["id"].astype(str) == str(question_id)]
+    if filtered.empty:
+        return None
+    row = filtered.iloc[0]
+    return {
+        "id": str(row["id"]),
+        "question": row["question"],
+        "category": row["category"],
+        "expected_concepts": str(
+            row["expected_concepts"]
+        ).split("|"),
+        "role": row["role"],
+        "difficulty": row["difficulty"]
+    }
 
 @app.route("/")
 def index():
@@ -64,7 +73,6 @@ def index():
 
 def get_questions_by_sector(sector):
     filtered = df[df["role"] == sector]
-
     questions_list = []
     for _, row in filtered.iterrows():
         questions_list.append({
@@ -98,6 +106,7 @@ def analyze():
         "duration",
         "0"
     )
+    sector = request.form.get("sector", "").strip()
     if audio is None or not audio.filename:
         return jsonify(
             {
@@ -178,6 +187,7 @@ def analyze():
         for area in evaluation.get("improvements", []):
             supabase.table("improvements").insert({
                 "user_id": session["user_id"],
+                "sector": sector,
                 "area": area
             }).execute()
 
@@ -260,7 +270,6 @@ def get_total_score(speech, evaluation):
         + speech["pace_score"] * 0.10
         + speech["filler_score"] * 0.10
     )
-
     return round(total)
 @app.route("/dashboard")
 def dashboard():
@@ -274,11 +283,17 @@ def dashboard():
         .order("created_at", desc=True)
         .execute()
     )
-    improvements = result.data or []
+    rows = result.data or []
+    grouped_improvements = {}
+    for row in rows:
+        sector = row.get("sector") or "Other"
+        if sector not in grouped_improvements:
+            grouped_improvements[sector] = []
+        grouped_improvements[sector].append(row)
 
     return render_template(
         "dashboard.html",
-        improvements=improvements
+        grouped_improvements=grouped_improvements
     )
 
 @app.errorhandler(413)

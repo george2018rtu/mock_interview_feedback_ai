@@ -8,8 +8,6 @@ const timer = document.getElementById("timer");
 const recordIcon = document.getElementById("recordingIndicator");
 const sectorBox = document.getElementById("sector");
 
-
-
 let recorder;
 let chunks = [];
 let startTime;
@@ -195,6 +193,7 @@ async function sendRecording(audio, seconds)
     form.append("audio", audio, `answer.${ext}`);
     form.append("question_id", questionBox.value);
     form.append("duration", seconds.toString());
+    form.append("sector", sectorBox.value);
 
     try
     {
@@ -228,7 +227,6 @@ async function sendRecording(audio, seconds)
         questionBox.disabled = false;
     }
 }
-
 function getExtension(type)
 {
     if (type.includes("ogg"))

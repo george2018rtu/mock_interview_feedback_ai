@@ -40,24 +40,29 @@
 
         <section class="card">
             <h1>What You Should Improve</h1>
+            {% if grouped_improvements %}
+                {% for sector, improvements in grouped_improvements.items() %}
+                    <section class="card-sector-section">
+                        <h2>{{ sector }}</h2>
 
-            {% if improvements %}
-                <div class="improvement-list">
+                        <div class="improvement-list">
 
-                    {% for item in improvements %}
-                        <article class="improvement-item">
-                            <ul>
-                                <li>{{ item.area }}</li>
-                            </ul>
-                        </article>
-                    {% endfor %}
+                            {% for item in improvements %}
+                                <article class="improvement-item">
+                                    <ul>
+                                        <li>{{ item.area }}</li>
+                                    </ul>
+                                </article>
+                            {% endfor %}
 
-                </div>
+                        </div>
+                {% endfor %}
             {% else %}
                 <p>
                     Complete an interview to receive improvement feedback.
                 </p>
             {% endif %}
+            
         </section>
 
     </main>

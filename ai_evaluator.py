@@ -65,18 +65,13 @@ Return JSON only.
             "type": "json_object"
         }
     )
-
     content = res.choices[0].message.content
-
     if not content:
         raise ValueError(
             "The evaluation API returned no content."
         )
-
     result = json.loads(content)
-
     validate_result(result)
-
     return result
 
 
@@ -90,34 +85,27 @@ def validate_result(result):
         "improved_answer",
         "follow_up_question"
     }
-
     if not required.issubset(result):
         raise ValueError(
             "The evaluation response is incomplete."
         )
-
     score_names = {
         "relevance",
         "specificity",
         "structure",
         "communication"
     }
-
     scores = result["scores"]
-
     if not score_names.issubset(scores):
         raise ValueError(
             "The evaluation scores are incomplete."
         )
-
     for name in score_names:
         score = scores[name]
-
         if not isinstance(score, int):
             raise ValueError(
                 "Evaluation scores must be integers."
             )
-
         if score < 0 or score > 100:
             raise ValueError(
                 "Evaluation scores must be from 0 to 100."
