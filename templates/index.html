@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <title>AI Mock Interview</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
     <main class="container">
@@ -9,7 +10,7 @@
             <h1>AI Mock Interview</h1>
             <p class="subtitle">Record an answer and receive feedback on content, structure, pacing, and filler words.</p>
         </header>
-        <section class="card controls">
+        <section class="card-controls">
             <label for="question">Interview question</label>
             <select id="question">
                 {% for item in questions %}
@@ -31,23 +32,23 @@
             <p>Transcribing and evaluating your answer...</p>
         </section>
         <section id="results" hidden>
-            <div class="score-card"><p>Overall score</p><strong id="overallScore"></strong></div>
+            <div class="score-card" style="font-size:36px; font-weight:bold"><p>Overall score</p><strong id="overallScore"></strong></div>
             <div class="metric-grid">
-                <article class="card metric"><span>Relevance</span><strong id="relevanceScore"></strong></article>
+                <article class="card metric"><span><br>Relevance</span><strong id="relevanceScore"></strong></article>
                 <article class="card metric"><span>Structure</span><strong id="structureScore"></strong></article>
                 <article class="card metric"><span>Specificity</span><strong id="specificityScore"></strong></article>
                 <article class="card metric"><span>Communication</span><strong id="communicationScore"></strong></article>
                 <article class="card metric"><span>Speaking speed</span><strong id="speakingSpeed"></strong></article>
                 <article class="card metric"><span>Filler words</span><strong id="fillerCount"></strong></article>
             </div>
-            <article class="card"><h2>Transcript</h2><p id="transcript"></p></article>
+            <article class="card" style="border: 2px solid gray;margin:10px;padding:5px;border-radius:5px; background-color:white"><h2>Transcript</h2><p id="transcript"></p></article>
             <div class="feedback-grid">
-                <article class="card"><h2>Strengths</h2><ul id="strengths"></ul></article>
-                <article class="card"><h2>Areas to improve</h2><ul id="improvements"></ul></article>
+                <article class="card" style="border: 2px solid gray;border-radius:5px;padding: 5px;background-color: lightblue;margin: 10px; "><h2>Strengths</h2><ul id="strengths"></ul></article>
+                <article class="card" style="border: 2px solid gray; ; border-radius:5px; padding: 5px;background-color: lightcoral;margin: 10px; "><h2>Areas to improve</h2><ul id="improvements"></ul></article>
             </div>
-            <article class="card"><h2>Missing concepts</h2><ul id="missingConcepts"></ul></article>
-            <article class="card"><h2>Improved answer</h2><p id="improvedAnswer"></p></article>
-            <article class="card"><h2>Possible follow-up question</h2><p id="followUpQuestion"></p></article>
+            <article class="card" style="border: 2px solid gray; ; border-radius:5px; padding: 5px;background-color: lightcoral;margin: 10px;"><h2>Missing concepts</h2><ul id="missingConcepts"></ul></article>
+            <article class="card" style="border: 2px solid gray; ; border-radius:5px; padding: 5px;margin:10px"><h2>Improved answer</h2><p id="improvedAnswer"></p></article>
+            <article class="card" style="border: 2px solid gray; ; border-radius:5px; padding: 5px; margin:10px"><h2>Possible follow-up question</h2><p id="followUpQuestion"></p></article>
         </section>
         <script src="{{ url_for('static', filename='script.js') }}"></script>
     </main>
