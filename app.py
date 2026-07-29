@@ -10,7 +10,7 @@ from groq import Groq
 from ai_evaluator import evaluate_answer
 from analyzer import analyze_speech
 from questions import questions
-
+import pandas as pd
 load_dotenv()
 
 client = Groq(
@@ -22,6 +22,8 @@ app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = (
     20 * 1024 * 1024
 )
+
+df = pd.read_csv('questions.csv')
 
 AUDIO_TYPES = {
     ".webm",
@@ -35,19 +37,19 @@ AUDIO_TYPES = {
 
 def get_questions():
     items = []
-
     for group in questions.values():
         for item in group:
             items.append(item)
-
     return items
 
+def get_all_possible_sectors():
+    sectors = df["role"].dropna().unique()
+    return sectors.tolist()
 
 def get_question(question_id):
     for item in get_questions():
         if item["id"] == question_id:
             return item
-
     return None
 
 
@@ -55,9 +57,36 @@ def get_question(question_id):
 def index():
     return render_template(
         "index.html",
-        questions=get_questions()
+        sectors=get_all_possible_sectors()
     )
 
+def get_questions_by_sector(sector):
+    filtered = df[df["role"] == sector]
+
+    questions_list = []
+
+    for _, row in filtered.iterrows():
+        questions_list.append({
+            "id": row["id"],
+            "question": row["question"],
+            "category": row["category"],
+            "expected_concepts": row["expected_concepts"].split("|"),
+            "role": row["role"],
+            "difficulty": row["difficulty"]
+        })
+
+    return questions_list
+
+@app.route("/questions")
+def filtered_questions():
+    sector = request.args.get("sector", "").strip()
+
+    if not sector:
+        return jsonify([])
+
+    questions_list = get_questions_by_sector(sector)
+
+    return jsonify(questions_list)
 
 @app.route("/analyze", methods=["POST"])
 def analyze():

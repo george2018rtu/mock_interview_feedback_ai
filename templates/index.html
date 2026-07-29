@@ -10,13 +10,24 @@
             <h1>AI Mock Interview</h1>
             <p class="subtitle">Record an answer and receive feedback on content, structure, pacing, and filler words.</p>
         </header>
-        <section class="card-controls">
-            <label for="question">Interview question</label>
-            <select id="question">
-                {% for item in questions %}
-                    <option value="{{ item.id }}">{{ item.question }}</option>
-                {% endfor %}
-            </select>
+            <section class="card-controls">
+                <label for="question">What job sector are you in or planning to apply to?</label>
+                <label for="sector" style="font-size:20px"><br><br><strong>Choose a sector</strong></label>
+                    <select id="sector">
+                        <option value="">Select a sector</option>
+
+                        {% for sector in sectors %}
+                            <option value="{{ sector }}">
+                                {{ sector }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="question" style="font-size:20px"><br><br><strong>Choose a question</strong></label>
+
+                    <select id="question" disabled>
+                        <option value="">Select a sector first</option>
+                    </select>
             <div class="status-row">
                 <span id="recordingIndicator" class="indicator"></span>
                 <p id="status">Press start when you are ready.</p>

@@ -6,6 +6,9 @@ const results = document.getElementById("results");
 const loading = document.getElementById("loading");
 const timer = document.getElementById("timer");
 const recordIcon = document.getElementById("recordingIndicator");
+const sectorBox = document.getElementById("sector");
+
+
 
 let recorder;
 let chunks = [];
@@ -71,6 +74,78 @@ startBtn.addEventListener("click", async () =>
     {
         status.textContent =
             "Microphone access failed. Check browser permissions.";
+    }
+});
+sectorBox.addEventListener("change", async () => {
+    const sector = sectorBox.value;
+
+    questionBox.innerHTML = "";
+
+    if (!sector) {
+        questionBox.disabled = true;
+
+        questionBox.innerHTML = `
+            <option value="">
+                Select a sector first
+            </option>
+        `;
+
+        return;
+    }
+
+    questionBox.disabled = true;
+
+    questionBox.innerHTML = `
+        <option value="">
+            Loading questions...
+        </option>
+    `;
+
+    try {
+        const response = await fetch(
+            `/questions?sector=${encodeURIComponent(sector)}`
+        );
+
+        const questions = await response.json();
+
+        questionBox.innerHTML = "";
+
+        if (questions.length === 0) {
+            questionBox.innerHTML = `
+                <option value="">
+                    No questions found
+                </option>
+            `;
+
+            return;
+        }
+
+        questionBox.innerHTML = `
+            <option value="">
+                Select a question
+            </option>
+        `;
+
+        questions.forEach(question => {
+            const option = document.createElement("option");
+
+            option.value = question.id;
+            option.textContent =
+                `${question.question} (${question.difficulty})`;
+
+            questionBox.appendChild(option);
+        });
+
+        questionBox.disabled = false;
+
+    } catch (error) {
+        console.error(error);
+
+        questionBox.innerHTML = `
+            <option value="">
+                Could not load questions
+            </option>
+        `;
     }
 });
 
