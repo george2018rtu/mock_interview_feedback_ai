@@ -102,6 +102,7 @@ def analyze():
 
     audio = request.files.get("audio")
     question_id = request.form.get("question_id", "").strip()
+    custom_question_text = request.form.get("custom_question_text", "").strip()
     duration_text = request.form.get(
         "duration",
         "0"
@@ -114,14 +115,23 @@ def analyze():
                     "No audio file was submitted."
             }
         ), 400
-    question = get_question(question_id)
-    if question is None:
-        return jsonify(
-            {
-                "error":
-                    "The selected question is invalid."
-            }
-        ), 400
+    if question_id == "followup":
+        question = {
+            "id": "followup",
+            "question": custom_question_text,
+            "category": "behavioral",          # or whatever default you want
+            "expected_concepts": [],
+        }
+    else:
+        question = get_question(question_id)
+
+        if question is None:
+            return jsonify(
+                {
+                    "error":
+                        "The selected question is invalid."
+                }
+            ), 400
     try:
         seconds = float(duration_text)
     except ValueError:

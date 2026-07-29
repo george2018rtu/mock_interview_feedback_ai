@@ -7,6 +7,7 @@ const loading = document.getElementById("loading");
 const timer = document.getElementById("timer");
 const recordIcon = document.getElementById("recordingIndicator");
 const sectorBox = document.getElementById("sector");
+const useFollowUpButton = document.getElementById("useFollowUpButton");
 
 let recorder;
 let chunks = [];
@@ -192,6 +193,10 @@ async function sendRecording(audio, seconds)
 
     form.append("audio", audio, `answer.${ext}`);
     form.append("question_id", questionBox.value);
+    form.append(
+    "custom_question_text",
+    document.getElementById("followUpQuestion").textContent
+    );
     form.append("duration", seconds.toString());
     form.append("sector", sectorBox.value);
 
@@ -313,6 +318,7 @@ function showResults(data)
 
     document.getElementById("followUpQuestion").textContent =
         evalData.follow_up_question;
+        useFollowUpButton.disabled = !evalData.follow_up_question;
 
     results.hidden = false;
 
@@ -324,3 +330,26 @@ function showResults(data)
         }
     );
 }
+
+useFollowUpButton.addEventListener("click", () => {
+    const followUp = document.getElementById("followUpQuestion").textContent.trim();
+
+    if (!followUp) {
+        return;
+    }
+    for (const option of questionBox.options) {
+        if (option.textContent === followUp) {
+            questionBox.value = option.value;
+            return;
+        }
+    }
+
+    const option = document.createElement("option");
+
+    option.value = "followup";
+    option.textContent = followUp;
+
+    questionBox.insertBefore(option, questionBox.children[1]);
+
+    questionBox.value = "followup";
+});
