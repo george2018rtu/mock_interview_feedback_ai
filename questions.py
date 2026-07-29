@@ -17,9 +17,8 @@ def load_questions_from_csv():
                 continue
             category = row.get("category", "General").strip() or "General"
             role = row.get("role", "").strip()
-            difficulty = row.get("difficulty", "").strip()
+            difficulty = (row.get("difficulty") or "").strip()
             q_id = row.get("id", "").strip() or f"q_{idx + 1}"   # keep the real id from the CSV
-
             concepts_raw = row.get("expected_concepts", "").strip()
             concepts = [c.strip() for c in concepts_raw.split("|") if c.strip()] if concepts_raw else []
                 
