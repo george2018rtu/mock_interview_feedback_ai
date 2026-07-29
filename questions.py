@@ -18,14 +18,13 @@ def load_questions_from_csv():
             category = row.get("category", "General").strip() or "General"
             role = row.get("role", "").strip()
             difficulty = row.get("difficulty", "").strip()
-            concepts = []
-            if role:
-                concepts.append(role)
-            if difficulty:
-                concepts.append(f"{difficulty} level")
+            q_id = row.get("id", "").strip() or f"q_{idx + 1}"   # keep the real id from the CSV
+
+            concepts_raw = row.get("expected_concepts", "").strip()
+            concepts = [c.strip() for c in concepts_raw.split("|") if c.strip()] if concepts_raw else []
                 
             question_item = {
-                "id": f"q_{idx + 1}",
+                "id": q_id,
                 "question": q_text,
                 "category": category,
                 "role": role,
