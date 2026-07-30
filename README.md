@@ -19,7 +19,7 @@ Using this software, you can practice behavorial and technical interview questio
 > <img width="1913" height="893" alt="image" src="https://github.com/user-attachments/assets/9ff7a093-6de6-457d-8928-4a2dcf3717d9" />
 
 >
-> *Show the timer, recording indicator, and Stop Recording button while recording.*
+> *Shows the timer, recording indicator, and Stop Recording button while recording.*
 
 ---
 
