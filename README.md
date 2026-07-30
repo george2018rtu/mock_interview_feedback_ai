@@ -1,8 +1,6 @@
 # AI Mock Interview Analyzer
 
-Using this software, you can practice behavorial and technical interview question with a real-time coach!
-
-The AI Mock Interview Analyzer is a Flask web application that allows users to answer interview questions verbally. It transcribes spoken responses using Whisper, evaluates them using Llama 3.3 through the Groq API, and provides detailed feedback on answer quality, communication, and interview performance.
+Using this software, you can practice behavorial and technical interview questions with a real-time coach!
 
 ---
 
@@ -119,70 +117,6 @@ Saved to Supabase
 > <img width="1866" height="906" alt="image" src="https://github.com/user-attachments/assets/1fdc21d9-78c3-4f45-976d-2437dc4c3f2c" />
 
 *Stores all feedback comments from the AI into one database
-
----
-
-## Installation
-
-Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/mock_interview_feedback_ai.git
-cd mock_interview_feedback_ai
-```
-
-Create a virtual environment
-
-Windows
-
-```bash
-python -m venv venv
-venv\Scripts\Activate.ps1
-```
-
-Mac/Linux
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Create a `.env`
-
-```env
-GROQ_API_KEY=YOUR_KEY
-GROQ_EVALUATION_MODEL=llama-3.3-70b-versatile
-SUPABASE_URL=YOUR_URL
-SUPABASE_KEY=YOUR_KEY
-```
-
-Run the project
-
-```bash
-python app.py
-```
-
-Open
-
-```
-http://127.0.0.1:5000
-```
----
-
-### Login
-
-Login using the guest account:
-
-- **Email:** `guest.user@interviewanalyzer.com`
-- **Password:** `guestuser`
-
-This way, you can test out the features of our project!
 
 ---
 
