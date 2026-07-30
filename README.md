@@ -120,6 +120,76 @@ Saved to Supabase
 
 ---
 
+## How to run our project
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/mock_interview_feedback_ai.git
+cd mock_interview_feedback_ai
+```
+
+## 2. Create a Virtual Environment
+
+### Windows
+
+```bash
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+### macOS / Linux
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+## 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Configure Environment Variables
+
+Create a `.env` file in the project's root directory with the following:
+
+```env
+GROQ_API_KEY=YOUR_GROQ_API_KEY
+GROQ_EVALUATION_MODEL=llama-3.3-70b-versatile
+SUPABASE_URL=YOUR_SUPABASE_URL
+SUPABASE_KEY=YOUR_SUPABASE_KEY
+```
+
+Alternatively, you can access our web application here if you do not want to set up any keys....
+https://mockinterviewfeedbackai-production.up.railway.app/ 
+
+## 5. Run the Application (or use the URL to our web application)
+
+```bash
+python app.py
+```
+
+The application will be available at:
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+# Guest Login
+
+Use the guest account to try the features, including using our interview analysis, and seeing a display of all feedback points for you specifically stored in a database in Supabase(in areas to improve)
+
+| Field | Value |
+|-------|-------|
+| **Email** | `guest.user@interviewanalyzer.com` |
+| **Password** | `guestuser` |
+
+The guest account provides access to the application's interview practice and AI feedback features.
+
 ## Project Structure
 
 ```
