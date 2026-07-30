@@ -138,7 +138,9 @@ def analyze():
     if "user_id" not in session:
         return jsonify({"error": "Please log in first."}), 401
 
-    #gets the uploaded audio from the form
+    #I'm getting all this stuff from the form I defined in the js script. I used post request to get the feedback and scores and stuff, as well as passing in the form in my request
+    
+    #gets the uploaded audio from the form in the js script that I created 
     audio = request.files.get("audio")
 
     #gets the selected question id
@@ -256,10 +258,7 @@ def login():
         #check the password
         password=request.form.get(("password") or "")
         try:
-            response=supabase.auth.sign_in_with_password({
-                "email":email,
-                "password":password
-            })
+            response=supabase.auth.sign_in_with_password({"email":email, "password":password})
             session["user_id"]=str(response.user.id)
             session["email"]=response.user.email
             #if it's there/in the authentication part of supabase, lead them to index.html which is where the feedback and stuff are shown.
