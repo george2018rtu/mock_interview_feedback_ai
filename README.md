@@ -2,6 +2,9 @@
 
 Using this software, you can practice behavorial and technical interview questions with a real-time coach!
 
+Just a heads up, you need an API key to run this project for Groq and Supabase. If you want to see the functionality, access this url:
+https://mockinterviewfeedbackai-production.up.railway.app/ 
+
 ---
 
 ## Demo
@@ -151,18 +154,20 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 4. Configure Environment Variables
+## 4. Configure Environment Variables (because this project needs API keys)
 
 Create a `.env` file in the project's root directory with the following:
 
 ```env
 GROQ_API_KEY=YOUR_GROQ_API_KEY
 GROQ_EVALUATION_MODEL=llama-3.3-70b-versatile
+GROQ_TRANSCRIPTION_MODEL=whisper-large-v3-turbo
 SUPABASE_URL=YOUR_SUPABASE_URL
 SUPABASE_KEY=YOUR_SUPABASE_KEY
+FLASK_SECRET_KEY=YOUR_SECRET_FLASK_KEY
 ```
 
-Alternatively, you can access our web application here if you do not want to set up any keys....
+Alternatively, you can access our web application here if you do not want to set up any API keys....
 https://mockinterviewfeedbackai-production.up.railway.app/ 
 
 ## 5. Run the Application (or use the URL to our web application)
